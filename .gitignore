@@ -1,0 +1,44 @@
+# =============== #
+# Unity generated #
+# =============== #
+Library/
+Logs/
+Temp/
+obj/
+*.csproj
+*.sln
+*.userprefs
+*.unityproj
+*.pidb
+*.booproj
+sysinfo.txt
+
+# ======== #
+# VS crap  #
+# ======== #
+.vs/
+*.suo
+*.user
+*.csproj.user
+
+# ========== #
+# Rider/OSX #
+# ========== #
+*.DotSettings.user
+.DS_Store
+
+# ======= #
+# Project #
+# ======= #
+ModCompilations/
+.vsconfig
+Assembly-CSharp.csproj
+PPv2URPConverters.csproj
+ScriptablePacker.csproj
+PsdPlugin.csproj
+NewAssembly.csproj
+UserSettings/
+
+# Mods with test content (create your own!)
+Mods/
+*.dll
