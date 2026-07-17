@@ -13,7 +13,7 @@ A sample Unity project demonstrating a runtime mod loader. It compiles C# source
 
 ```
 Assets/Scripts/
-├── MainMenuLoader.cs        # Entry point — compiles & loads mods on Start
+├── MainMenuLoader.cs         # Entry point — compiles & loads mods on Start
 ├── Paths.cs                  # Path resolution (Mods/, ModCompilations/)
 ├── ModLoader/
 │   ├── ModLoader.cs          # Loads compiled DLLs
