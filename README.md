@@ -26,7 +26,7 @@ Assets/Scripts/
 
 ## Example mod
 
-```json
+```json5
 // mod.json
 
 {
