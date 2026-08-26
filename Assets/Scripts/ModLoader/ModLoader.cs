@@ -34,6 +34,8 @@ namespace ModSystem
                 {
                     MethodInfo method = Assembly.LoadFile(mod.DllPath).GetType(mod.EntryPoint).GetMethod("Main", BindingFlags.Public | BindingFlags.Static);
                     method.Invoke(null, null);
+
+                    _loadedMods.Add(mod);
                 }
                 catch
                 {
@@ -41,7 +43,7 @@ namespace ModSystem
                 }
 
                 ModAPI.Utils.IsModConstantsValid = false;
-                _loadedMods.Add(mod);
+                ModAPI.Utils.ModConstants = null;
             }
         }
 
