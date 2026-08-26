@@ -69,6 +69,7 @@ namespace ModSystem
             if (!emitResult.Success)
             {
                 File.Delete(outputPath);
+                // your error display logic here
                 return null;
             }
 
