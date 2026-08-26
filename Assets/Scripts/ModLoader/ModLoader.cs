@@ -19,7 +19,10 @@ namespace ModSystem
                     continue;
 
                 if (!mod.Enabled)
+                {
                     _disabledMods.Add(mod);
+                    continue;
+                }
 
                 if (string.IsNullOrEmpty(mod.DllPath))
                     continue;
@@ -27,8 +30,15 @@ namespace ModSystem
                 ModAPI.Utils.ModConstants = mod;
                 ModAPI.Utils.IsModConstantsValid = true;
 
-                MethodInfo method = Assembly.LoadFile(mod.DllPath).GetType(mod.EntryPoint).GetMethod("Main", BindingFlags.Public | BindingFlags.Static);
-                method.Invoke(null, null);
+                try
+                {
+                    MethodInfo method = Assembly.LoadFile(mod.DllPath).GetType(mod.EntryPoint).GetMethod("Main", BindingFlags.Public | BindingFlags.Static);
+                    method.Invoke(null, null);
+                }
+                catch
+                {
+                    // your error display logic here
+                }
 
                 ModAPI.Utils.IsModConstantsValid = false;
                 _loadedMods.Add(mod);
