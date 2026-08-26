@@ -41,9 +41,11 @@ namespace ModSystem
                 {
                     // your error display logic here
                 }
-
-                ModAPI.Utils.IsModConstantsValid = false;
-                ModAPI.Utils.ModConstants = null;
+                finally
+                {
+                    ModAPI.Utils.IsModConstantsValid = false;
+                    ModAPI.Utils.ModConstants = null;
+                }
             }
         }
 
