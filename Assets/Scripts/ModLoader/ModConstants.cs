@@ -7,7 +7,7 @@ namespace ModSystem
         public string Description { get; set; }
         public string Version { get; set; }
         public string EntryPoint { get; set; }
-        public bool Enabled { get; set; }
+        public bool Enabled { get; set; } = true;
         public string ModDirectory { get; set; }
         public string DllPath { get; set; }
     }
