@@ -18,6 +18,9 @@ namespace ModSystem
         {
             _defaultReferences = GetDefaultReferences();
 
+            if (!Directory.Exists(Paths.ModsPath))
+                Directory.CreateDirectory(Paths.ModsPath);
+
             var modDirectories = Directory.GetDirectories(Paths.ModsPath);
 
             if (modDirectories.Length == 0)
@@ -27,13 +30,20 @@ namespace ModSystem
             {
                 if (!IsModValid(modDirectory))
                     continue;
+                try 
+                {
+                    var modConstants = DeserializeModJson(modDirectory);
 
-                var modConstants = DeserializeModJson(modDirectory);
+                    modConstants.ModDirectory = modDirectory;
+                    modConstants.DllPath = CompileMod(modConstants);
 
-                modConstants.ModDirectory = modDirectory;
-                modConstants.DllPath = CompileMod(modConstants);
-
-                CompiledMods.Add(modConstants);
+                    CompiledMods.Add(modConstants);
+                }
+                catch
+                {
+                    // your error display logic here
+                    continue;
+                }
             }
         }
 
@@ -61,7 +71,10 @@ namespace ModSystem
 
         private static string EmitMod(ModConstants modConstants, CSharpCompilation compilation)
         {
-            string outputFileName = $"{modConstants.Author}-{modConstants.ModName}-v{modConstants.Version}".Replace(" ", "");
+            if (!Directory.Exists(Paths.CompilationsPath))
+                Directory.CreateDirectory(Paths.CompilationsPath);
+            
+            string outputFileName = $"{modConstants.Author}-{modConstants.ModName}-v{modConstants.Version}".Replace(" ", "");            
             string outputPath = Paths.Combine(Paths.CompilationsPath, $"{outputFileName}.dll");
 
             EmitResult emitResult = CSharpFileSystemExtensions.Emit(compilation, outputPath);
