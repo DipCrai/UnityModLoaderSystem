@@ -61,7 +61,7 @@ namespace ModSystem
                 return null;
 
             CSharpCompilation compilation = CSharpCompilation.Create(
-                assemblyName: Guid.NewGuid().ToString().Normalize(),
+                assemblyName: Guid.NewGuid().ToString(),
                 syntaxTrees: syntaxTrees,
                 references: modMetadataReferences,
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
@@ -74,7 +74,7 @@ namespace ModSystem
             if (!Directory.Exists(Paths.CompilationsPath))
                 Directory.CreateDirectory(Paths.CompilationsPath);
             
-            string outputFileName = $"{modConstants.Author}-{modConstants.ModName}-v{modConstants.Version}".Replace(" ", "");            
+            string outputFileName = SanitizeFileName($"{modConstants.Author}-{modConstants.ModName}-v{modConstants.Version}");            
             string outputPath = Paths.Combine(Paths.CompilationsPath, $"{outputFileName}.dll");
 
             EmitResult emitResult = CSharpFileSystemExtensions.Emit(compilation, outputPath);
@@ -89,12 +89,23 @@ namespace ModSystem
             return outputPath;
         }
 
+        private static string SanitizeFileName(string fileName)
+        {
+            var invalidChars = Path.GetInvalidFileNameChars();
+
+            string sanitized = new string(
+                fileName.Where(c => !invalidChars.Contains(c)).ToArray()
+            );
+
+            return string.IsNullOrWhiteSpace(sanitized) ? "UnnamedMod" : sanitized;
+        }
+
         private static List<string> GetDefaultReferences()
         {
             var references = new List<string>();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (assembly.IsDynamic)
+                if (assembly.IsDynamic || string.IsNullOrEmpty(assembly.Location) || !File.Exists(assembly.Location))
                     continue;
                 
                 references.Add(assembly.Location);
@@ -138,7 +149,7 @@ namespace ModSystem
         private static List<string> GetModSources(string modDirectory)
         {
             var sources = new List<string>();
-            var scriptFiles = Directory.GetFiles(modDirectory, "*.cs");
+            var scriptFiles = Directory.GetFiles(modDirectory, "*.cs", SearchOption.AllDirectories);
 
             foreach (var scriptFile in scriptFiles)
             {
